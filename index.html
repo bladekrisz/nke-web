@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Insert template using JavaScript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="columns is-mobile is-centered">
+        <div id="content" class="column is-half">
+
+            <h1 class="title has-text-centered">Send me a message!</h1>
+
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input id="user__name" class="input" type="text" placeholder="Name...">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                    <input id="user__email" class="input" type="email" placeholder="Email...">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    <textarea id="user__message" class="textarea" placeholder="Message..."></textarea>
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button id="ajax__button" type="button" class="button is-link">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="ajax.js"></script>
+
+    <template id="feedback">
+        <article class="message is-success">
+            <div class="message-header">
+                <p>Success</p>
+            </div>
+            <div class="message-body">
+                <p id="greeting">Hi, name!</p>
+                <p>Happy to hear from you!</p>
+            </div>
+        </article>
+        <div class="control">
+            <button id="reload__button" type="button" class="button is-link">Again</button>
+        </div>
+    </template>
+</body>
+
+</html>
