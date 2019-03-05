@@ -1,6 +1,7 @@
 {
     "require": {
-        "csanquer/pdo-service-provider": "~1.1dev"
+        "csanquer/pdo-service-provider": "~1.1dev",
+        "silex/silex": "^2.0.4"
     },
     "require-dev": {
         "heroku/heroku-buildpack-php": "*"
