@@ -6,6 +6,8 @@ $connection = null;
 // write_log( $_POST );
 // write_log( $_SERVER );
 
+write_log('*' . getenv('DATABASE_URL') . '*');
+
 
 switch( $_GET["action"] ) {
     case "ajax_message": 
@@ -29,17 +31,49 @@ function ajax_message() {
         'greeting' => $greeting
     ];
     
-    db_insert( $name, $email, $message, $_SERVER['HTTP_HOST'] );
-    
-    echo json_encode( $response );
+    $db_options = getenv( 'DATABASE_URL' );
+
+    if( $db_options !== False ) {
+        insert_into_remote_db( $db_options, $name, $email, $message, $_SERVER['HTTP_HOST'] );
+    } else {
+        insert_into_local_db( $name, $email, $message, $_SERVER['HTTP_HOST'] );
+    }
+
+    echo json_encode( $response );    
 }
 
 
+function insert_into_remote_db( $db_options, $name = "", $email = "", $message = "", $ip = "" ) {
+    init_remote_db( $db_options );
+
+    $app->get('/db/', function() use($app) {
+        
+
+        $st = $app['pdo']->prepare("INSERT INTO messages (name, email, message, ip) VALUES ('$name', '$email', '$message', '$ip')");
+        $st->execute();
+      });
+}
 
 
+function init_remote_db( $db_options ) {
+
+    $dbopts = parse_url( $db_options );
+    $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
+        array(
+        'pdo.server' => array(
+            'driver'   => 'pgsql',
+            'user'     => $dbopts["user"],
+            'password' => $dbopts["pass"],
+            'host'     => $dbopts["host"],
+            'port'     => $dbopts["port"],
+            'dbname'   => ltrim($dbopts["path"],'/')
+            )
+        )
+    );
+}
 
 
-function db_init() {
+function init_local_db() {
     global $connection;
 
     $host     = "localhost";
@@ -57,11 +91,11 @@ function db_init() {
 }
 
 
-function db_insert( $name = "", $email = "", $message = "", $ip = "" ) {
+function insert_into_local_db( $name = "", $email = "", $message = "", $ip = "" ) {
 
     global $connection;
 
-    if( db_init() ) {  
+    if( init_local_db() ) {  
         $name    = mysqli_real_escape_string( $connection, $name );
         $email   = mysqli_real_escape_string( $connection, $email );
         $message = mysqli_real_escape_string( $connection, $message );
@@ -70,6 +104,10 @@ function db_insert( $name = "", $email = "", $message = "", $ip = "" ) {
         db_query( $sql );
     }
 }
+
+
+
+
 
 
 function db_query( $query ) {
