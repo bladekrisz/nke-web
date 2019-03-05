@@ -6,7 +6,7 @@ $connection = null;
 // write_log( $_POST );
 // write_log( $_SERVER );
 
-write_log('*' . getenv('DATABASE_URL') . '*');
+// write_log('*' . getenv('DATABASE_URL') . '*');
 
 
 switch( $_GET["action"] ) {
@@ -114,9 +114,9 @@ function db_query( $query ) {
     global $connection;
 
     if( $connection->query( $query ) === TRUE ) {
-        write_log("New record created successfully");
+        // write_log("New record created successfully");
     } else {
-        write_log( "Error: " . $query . "<br>" . $connection->error );
+        // write_log( "Error: " . $query . "<br>" . $connection->error );
     } 
 }
 
