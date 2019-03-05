@@ -43,19 +43,13 @@ function ajax_message() {
 }
 
 
+
 function insert_into_remote_db( $db_options, $name = "", $email = "", $message = "", $ip = "" ) {
-    init_remote_db( $db_options );
 
-    $app->get('/db/', function() use($app) {
-        
+    require('../vendor/autoload.php');
+    $app = new Silex\Application();
+    $app['debug'] = true;
 
-        $st = $app['pdo']->prepare("INSERT INTO messages (name, email, message, ip) VALUES ('$name', '$email', '$message', '$ip')");
-        $st->execute();
-      });
-}
-
-
-function init_remote_db( $db_options ) {
 
     $dbopts = parse_url( $db_options );
     $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
@@ -70,7 +64,22 @@ function init_remote_db( $db_options ) {
             )
         )
     );
+
+
+    $app->get('/db/', function() use($app) {
+        $st = $app['pdo']->prepare("INSERT INTO messages (name, email, message, ip) VALUES ('$name', '$email', '$message', '$ip')");
+        $st->execute();
+    });
+
+
+    // Our web handlers
+    /*$app->get('/', function() use($app) {
+        return $app['html']->render('index.html');
+    });*/
+    //$app->run();
 }
+
+
 
 
 function init_local_db() {
@@ -119,6 +128,10 @@ function db_query( $query ) {
         // write_log( "Error: " . $query . "<br>" . $connection->error );
     } 
 }
+
+
+
+
 
 
 
