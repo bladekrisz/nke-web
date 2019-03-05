@@ -46,7 +46,8 @@ function ajax_message() {
 
 function insert_into_remote_db( $db_options, $name = "", $email = "", $message = "", $ip = "" ) {
 
-    require('../vendor/autoload.php');
+    require('vendor/autoload.php');
+    
     $app = new Silex\Application();
     $app['debug'] = true;
 
